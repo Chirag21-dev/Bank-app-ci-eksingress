@@ -6,7 +6,7 @@ pipeline {
         maven 'maven'
     }
     environment {
-        IMAGE_NAME = "chiragks1/bankappCI"
+        IMAGE_NAME = "chiragks1/bankappci"
         TAG = "${env.BUILD_NUMBER}"
         }
     stages {
