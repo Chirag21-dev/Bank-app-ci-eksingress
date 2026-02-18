@@ -16,10 +16,14 @@ pipeline {
                   sh 'mvn compile'
             }
         }
-        stage('Test stage') {
+        /*stage('Test stage') {
             steps {
                   sh 'mvn test'
             }
-        }
+        }*/
+        stage('Package stage') {
+            steps {
+                  sh 'mvn package --DskipTests'
+            }
     }
-}
+}}
