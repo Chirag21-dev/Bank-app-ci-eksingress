@@ -23,7 +23,7 @@ pipeline {
         }*/
         stage('Package stage') {
             steps {
-                  sh 'mvn package --DskipTests'
+                  sh 'mvn package -DskipTests'
             }
     }
 }}
