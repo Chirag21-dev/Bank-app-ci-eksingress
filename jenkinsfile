@@ -48,4 +48,14 @@ pipeline {
                 }
             }
         }
+        stage('Trigger CD Pipeline') {
+        steps {
+        build job: 'bankapp-cd-pipeline',
+              parameters: [
+                  string(name: 'IMAGE_NAME', value: IMAGE_NAME),
+                  string(name: 'IMAGE_TAG', value: TAG),
+              ],
+              wait: false
+    }
+}
 }}
