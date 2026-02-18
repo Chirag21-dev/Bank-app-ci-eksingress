@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven 'maven'
+    }
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Chirag21-dev/Bank-app-ci-eksingress.git'
+            }
+        }
+        stage('Compile stage') {
+            steps {
+                  sh 'mvn compile'
+            }
+        }
+        stage('Test stage') {
+            steps {
+                  sh 'mvn test'
+            }
+        }
+    }
+}
