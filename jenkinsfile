@@ -5,6 +5,10 @@ pipeline {
         jdk 'jdk21'
         maven 'maven'
     }
+    environment {
+        IMAGE_NAME = "chiragks1/bankappCI"
+        TAG = "${env.BUILD_NUMBER}"
+        }
     stages {
         stage('Git Checkout') {
             steps {
@@ -26,4 +30,22 @@ pipeline {
                   sh 'mvn package -DskipTests'
             }
     }
+    stage('Docker build') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred') {
+                        sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                    }
+                }
+            }
+        }
+        stage('Docker Push Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred') {
+                        sh "docker push ${IMAGE_NAME}:${TAG}"
+                    }
+                }
+            }
+        }
 }}
