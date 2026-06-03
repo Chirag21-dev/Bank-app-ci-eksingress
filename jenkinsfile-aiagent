@@ -52,4 +52,9 @@ stage('AI Failure Detection') {
 }
      
 }
+post {
+        always {
+            archiveArtifacts artifacts: 'compile.log, package.log, pipeline.log, ai_analysis.txt', fingerprint: true
+        }
+    }
 }
