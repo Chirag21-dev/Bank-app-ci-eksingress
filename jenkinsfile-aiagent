@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+    
+    tools {
+        jdk 'jdk21'
+        maven 'maven'
+    }
+    environment {
+        IMAGE_NAME = "chiragks1/bankappci"
+        TAG = "${env.BUILD_NUMBER}"
+        OPENAI_API_KEY = credentials('OPENAI_API_KEY')
+        }
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Chirag21-dev/Bank-app-ci-eksingress.git'
+            }
+        }
+        stage('Compile stage') {
+            steps {
+                  sh 'mvn compile 2>&1 | tee compile.log'
+            }
+        }
+        /*stage('Test stage') {
+            steps {
+                  sh 'mvn test'
+            }
+        }*/
+        stage('Package stage') {
+            steps {
+                  sh 'mvn package -DskipTests 2>&1 | tee package.log'
+            }
+    }
+
+     stage('Setup Python Env') {
+       steps {
+        sh '''
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+        '''
+    }
+}
+stage('AI Failure Detection') {
+    steps {
+        sh '''
+            . venv/bin/activate
+            cat compile.log package.log > pipeline.log
+            python openai_agent.py pipeline.log > ai_analysis.txt
+        '''
+    }
+}
+     
+}
+}
